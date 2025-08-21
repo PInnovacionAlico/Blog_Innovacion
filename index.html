@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog de Innovación | Alico</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/images/Ali_head.png" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/images/Ali_head.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/accessibility.css">
+    <link rel="stylesheet" href="../components/components.css">
+    <link rel="stylesheet" href="css/blog-styles.css">
+    
+    <!-- CMS Netlify -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <!-- CSS crítico inline -->
+    <style>
+        /* === CRÍTICO: Anti-FOUC === */
+        body { opacity: 0; transition: opacity 0.3s ease; }
+        body.components-loaded { opacity: 1; }
+        
+        /* === CRÍTICO: Placeholder header === */
+        .header-placeholder {
+            height: 80px; background: var(--amarillo-oro); position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-family: 'Work Sans', sans-serif;
+        }
+        body.components-loaded .header-placeholder { display: none; }
+        
+        /* === CRÍTICO: Botón accesibilidad === */
+        .accessibility-toggle {
+            position: fixed; top: 160px; right: 20px; background: linear-gradient(135deg, var(--verde-natura) 0%, var(--verde-natura-80) 100%);
+            color: white; width: 60px; height: 60px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 28px; box-shadow: 0 4px 20px rgba(113, 179, 56, 0.4); z-index: 999; transition: all 0.3s ease;
+        }
+        .accessibility-toggle:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body>
+    <!-- Placeholder temporal para header -->
+    <div class="header-placeholder">
+        🚀 Cargando Alico...
+    </div>
+
+    <!-- Los componentes se cargarán automáticamente aquí -->
+
+    <!-- Contenido principal -->
+    <main id="main-content">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Navegación de ruta">
+            <div class="breadcrumb-nav">
+                <a href="../index.html" class="breadcrumb-link">Inicio</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current" aria-current="page">Blog</span>
+            </div>
+        </nav>
+        
+        <!-- Banner principal -->
+        <section class="banner-section">
+            <div class="banner-content banner-blog">
+                BLOG DE INNOVACIÓN
+            </div>
+        </section>
+
+        <!-- Descripción -->
+        <section class="model-card">
+            <h2>Últimas Noticias y Artículos</h2>
+            <p>Mantente al día con las últimas novedades, proyectos y avances en innovación de Alico. Nuestro blog te trae contenido exclusivo sobre sostenibilidad, tecnología y el futuro del packaging.</p>
+        </section>
+
+        <!-- Filtros y búsqueda -->
+        <section class="blog-filters">
+            <div class="filters-container">
+                <div class="search-box">
+                    <span class="material-symbols-rounded search-icon">search</span>
+                    <input type="text" id="searchInput" placeholder="Buscar artículos..." aria-label="Buscar artículos">
+                </div>
+                
+                <div class="category-filters">
+                    <button class="filter-btn active" data-category="todos">Todos</button>
+                    <button class="filter-btn" data-category="innovacion">Innovación</button>
+                    <button class="filter-btn" data-category="sostenibilidad">Sostenibilidad</button>
+                    <button class="filter-btn" data-category="tecnologia">Tecnología</button>
+                    <button class="filter-btn" data-category="proyectos">Proyectos</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid de artículos -->
+        <section class="blog-grid" id="blogGrid">
+            <!-- Los artículos se cargarán dinámicamente aquí -->
+        </section>
+
+        <!-- Paginación -->
+        <section class="pagination" id="pagination">
+            <!-- La paginación se generará dinámicamente -->
+        </section>
+
+        <!-- Botón CMS para administradores -->
+        <div class="cms-admin" id="cmsAdmin" style="display: none;">
+            <button class="cms-button" onclick="openCMS()">
+                <span class="material-symbols-rounded">edit</span>
+                Administrar Blog
+            </button>
+        </div>
+    </main>
+
+    <!-- Scripts esenciales -->
+    <script src="../assets/js/scripts.js"></script>
+    <script src="../assets/js/component-loader.js"></script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script src="js/blog-cms.js"></script>
+    <script src="js/blog-main.js"></script>
+    
+    <!-- Script para Netlify CMS -->
+    <script>
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.getElementById("cmsAdmin").style.display = "block";
+                    });
+                } else {
+                    document.getElementById("cmsAdmin").style.display = "block";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
