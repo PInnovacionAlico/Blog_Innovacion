@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Admin | Blog de Innovación Alico</title>
+    <meta name="description" content="Panel de administración del CMS para el blog de Alico">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <!-- Netlify CMS -->
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+    
+    <style>
+        /* Estilos básicos para el admin */
+        :root {
+            --amarillo-oro: #DB9500;
+            --azul-novo: #003DA6;
+            --azul-claro: #40B4E5;
+            --verde-natura: #71B338;
+            --blanco: #FFFFFF;
+            --gris-claro: #F5F5F5;
+            --gris-oscuro: #666666;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--gris-claro);
+            color: var(--gris-oscuro);
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--azul-novo) 0%, var(--azul-claro) 100%);
+            color: var(--blanco);
+            padding: var(--spacing-xxl, 48px) 0;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-family: 'Zilla Slab', serif;
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-lg, 24px);
+        }
+        
+        .admin-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md, 16px);
+        }
+        
+        .admin-content {
+            background: var(--blanco);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: var(--spacing-xxl, 48px) auto;
+            overflow: hidden;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            background: var(--gris-claro);
+            border-bottom: 1px solid var(--gris-medio, #CCCCCC);
+        }
+        
+        .admin-tab {
+            flex: 1;
+            padding: var(--spacing-lg, 24px);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            color: var(--gris-oscuro);
+        }
+        
+        .admin-tab:hover {
+            background: var(--blanco);
+            color: var(--azul-novo);
+        }
+        
+        .admin-tab.active {
+            background: var(--blanco);
+            color: var(--azul-novo);
+            border-bottom: 3px solid var(--amarillo-oro);
+        }
+        
+        .admin-panel {
+            padding: var(--spacing-xxl, 48px);
+            min-height: 500px;
+        }
+        
+        .admin-section {
+            margin-bottom: var(--spacing-xl, 32px);
+        }
+        
+        .admin-section h3 {
+            font-family: 'Zilla Slab', serif;
+            font-size: 1.5rem;
+            color: var(--azul-novo);
+            margin-bottom: var(--spacing-lg, 24px);
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg, 24px);
+            margin-bottom: var(--spacing-xl, 32px);
+        }
+        
+        .stat-card {
+            background: var(--gris-claro);
+            padding: var(--spacing-lg, 24px);
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid var(--amarillo-oro);
+        }
+        
+        .stat-number {
+            font-family: 'Zilla Slab', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--azul-novo);
+            margin-bottom: var(--spacing-sm, 8px);
+        }
+        
+        .stat-label {
+            color: var(--gris-oscuro);
+            font-weight: 500;
+        }
+        
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg, 24px);
+        }
+        
+        .action-card {
+            background: var(--gris-claro);
+            padding: var(--spacing-lg, 24px);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .action-card:hover {
+            border-color: var(--azul-novo);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--azul-novo);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md, 16px);
+        }
+        
+        .action-icon .material-symbols-rounded {
+            font-size: 30px;
+            color: var(--blanco);
+        }
+        
+        .action-card h4 {
+            color: var(--azul-novo);
+            margin-bottom: var(--spacing-sm, 8px);
+        }
+        
+        .action-card p {
+            color: var(--gris-oscuro);
+            font-size: 0.9rem;
+        }
+        
+        .cms-iframe {
+            width: 100%;
+            height: 800px;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: var(--spacing-xxl, 48px);
+            color: var(--gris-oscuro);
+        }
+        
+        .loading-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md, 16px);
+            opacity: 0.7;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-state {
+            text-align: center;
+            padding: var(--spacing-xxl, 48px);
+            color: #d32f2f;
+        }
+        
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md, 16px);
+            opacity: 0.7;
+        }
+        
+        .btn-primary {
+            background: var(--amarillo-oro);
+            color: var(--blanco);
+            border: none;
+            padding: var(--spacing-md, 16px) var(--spacing-xl, 32px);
+            border-radius: 8px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm, 8px);
+        }
+        
+        .btn-primary:hover {
+            background: #c08500;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+            
+            .admin-tabs {
+                flex-direction: column;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header del admin -->
+    <header class="admin-header">
+        <div class="admin-container">
+            <h1>Panel de Administración</h1>
+            <p>Gestiona el contenido de tu blog de innovación</p>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="admin-container">
+        <div class="admin-content">
+            <!-- Tabs de navegación -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="dashboard">Dashboard</button>
+                <button class="admin-tab" data-tab="cms">CMS</button>
+                <button class="admin-tab" data-tab="settings">Configuración</button>
+            </div>
+
+            <!-- Panel del Dashboard -->
+            <div class="admin-panel" id="dashboard-panel">
+                <div class="admin-section">
+                    <h3>Estadísticas del Blog</h3>
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalPosts">6</div>
+                            <div class="stat-label">Artículos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalViews">7,140</div>
+                            <div class="stat-label">Visitas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalComments">23</div>
+                            <div class="stat-label">Comentarios</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalCategories">4</div>
+                            <div class="stat-label">Categorías</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>Acciones Rápidas</h3>
+                    <div class="admin-actions">
+                        <div class="action-card" onclick="openCMS()">
+                            <div class="action-icon">
+                                <span class="material-symbols-rounded">edit</span>
+                            </div>
+                            <h4>Crear Nuevo Post</h4>
+                            <p>Escribe y publica un nuevo artículo</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="openCMS('categories')">
+                            <div class="action-icon">
+                                <span class="material-symbols-rounded">category</span>
+                            </div>
+                            <h4>Gestionar Categorías</h4>
+                            <p>Organiza el contenido por temas</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="openCMS('authors')">
+                            <div class="action-icon">
+                                <span class="material-symbols-rounded">people</span>
+                            </div>
+                            <h4>Gestionar Autores</h4>
+                            <p>Administra el equipo de escritores</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="openCMS('comments')">
+                            <div class="action-icon">
+                                <span class="material-symbols-rounded">comment</span>
+                            </div>
+                            <h4>Moderar Comentarios</h4>
+                            <p>Revisa y aprueba comentarios</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>Actividad Reciente</h3>
+                    <div class="recent-activity">
+                        <p>Últimos posts publicados:</p>
+                        <ul id="recentPosts">
+                            <li>Nuevo Material Sostenible para Empaques - 15 de enero, 2024</li>
+                            <li>Inteligencia Artificial en Control de Calidad - 10 de enero, 2024</li>
+                            <li>Proyecto Lego: Innovación en Colaboración - 5 de enero, 2024</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel del CMS -->
+            <div class="admin-panel" id="cms-panel" style="display: none;">
+                <div class="admin-section">
+                    <h3>Netlify CMS</h3>
+                    <p>Utiliza el CMS integrado para gestionar todo el contenido de tu blog.</p>
+                    
+                    <div id="cmsContainer">
+                        <div class="loading-state">
+                            <span class="material-symbols-rounded loading-icon">hourglass_empty</span>
+                            <p>Cargando CMS...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de Configuración -->
+            <div class="admin-panel" id="settings-panel" style="display: none;">
+                <div class="admin-section">
+                    <h3>Configuración del Sitio</h3>
+                    <p>Personaliza la apariencia y funcionalidad de tu blog.</p>
+                    
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label>Nombre del Sitio</label>
+                            <input type="text" value="Blog de Innovación Alico" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>URL del Sitio</label>
+                            <input type="text" value="https://tu-sitio.netlify.app" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Email de Contacto</label>
+                            <input type="email" value="innovacion@alico.com" readonly>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="openCMS('config')">
+                            <span class="material-symbols-rounded">settings</span>
+                            Editar Configuración
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts del admin -->
+    <script>
+        // Variables globales
+        let currentTab = 'dashboard';
+        let cmsInitialized = false;
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdmin();
+            setupTabNavigation();
+            checkAuthentication();
+        });
+
+        // Inicializar el admin
+        function initializeAdmin() {
+            console.log('🚀 Panel de administración inicializado');
+            updateStats();
+        }
+
+        // Configurar navegación de tabs
+        function setupTabNavigation() {
+            const tabs = document.querySelectorAll('.admin-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
+        }
+
+        // Cambiar de tab
+        function switchTab(tabName) {
+            // Ocultar todos los paneles
+            document.querySelectorAll('.admin-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+
+            // Remover clase active de todos los tabs
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar panel seleccionado
+            document.getElementById(`${tabName}-panel`).style.display = 'block';
+
+            // Marcar tab como activo
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            currentTab = tabName;
+
+            // Si se selecciona CMS, inicializarlo
+            if (tabName === 'cms' && !cmsInitialized) {
+                initializeCMS();
+            }
+        }
+
+        // Verificar autenticación
+        function checkAuthentication() {
+            if (window.netlifyIdentity) {
+                const user = netlifyIdentity.currentUser();
+                if (user) {
+                    console.log('Usuario autenticado:', user);
+                    showAuthenticatedState();
+                } else {
+                    console.log('Usuario no autenticado');
+                    showLoginPrompt();
+                }
+            } else {
+                console.log('Netlify Identity no disponible');
+                showErrorState('Netlify Identity no está configurado');
+            }
+        }
+
+        // Mostrar estado autenticado
+        function showAuthenticatedState() {
+            // El usuario está autenticado, mostrar contenido normal
+            console.log('Mostrando contenido autenticado');
+        }
+
+        // Mostrar prompt de login
+        function showLoginPrompt() {
+            const cmsContainer = document.getElementById('cmsContainer');
+            if (cmsContainer) {
+                cmsContainer.innerHTML = `
+                    <div class="error-state">
+                        <span class="material-symbols-rounded error-icon">lock</span>
+                        <h3>Acceso Requerido</h3>
+                        <p>Debes iniciar sesión para acceder al CMS.</p>
+                        <button class="btn-primary" onclick="netlifyIdentity.open('login')">
+                            <span class="material-symbols-rounded">login</span>
+                            Iniciar Sesión
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Mostrar estado de error
+        function showErrorState(message) {
+            const cmsContainer = document.getElementById('cmsContainer');
+            if (cmsContainer) {
+                cmsContainer.innerHTML = `
+                    <div class="error-state">
+                        <span class="material-symbols-rounded error-icon">error</span>
+                        <h3>Error</h3>
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Inicializar CMS
+        function initializeCMS() {
+            if (cmsInitialized) return;
+
+            try {
+                // Verificar si Netlify CMS está disponible
+                if (typeof NetlifyCmsApp !== 'undefined') {
+                    const cmsContainer = document.getElementById('cmsContainer');
+                    cmsContainer.innerHTML = `
+                        <iframe src="/admin/" class="cms-iframe" title="Netlify CMS"></iframe>
+                    `;
+                    cmsInitialized = true;
+                } else {
+                    // Fallback: redirigir a la página del admin
+                    const cmsContainer = document.getElementById('cmsContainer');
+                    cmsContainer.innerHTML = `
+                        <div class="error-state">
+                            <span class="material-symbols-rounded error-icon">build</span>
+                            <h3>CMS No Disponible</h3>
+                            <p>El CMS no está disponible en este momento.</p>
+                            <a href="/admin/" class="btn-primary" target="_blank">
+                                <span class="material-symbols-rounded">open_in_new</span>
+                                Abrir CMS en Nueva Pestaña
+                            </a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error inicializando CMS:', error);
+                showErrorState('Error al inicializar el CMS');
+            }
+        }
+
+        // Abrir CMS
+        function openCMS(collection = null) {
+            if (collection) {
+                // Redirigir a una colección específica
+                window.open(`/admin/#/collections/${collection}`, '_blank');
+            } else {
+                // Cambiar al tab del CMS
+                switchTab('cms');
+            }
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            // En un entorno real, esto cargaría datos desde una API
+            // Por ahora, usamos datos estáticos
+            console.log('📊 Estadísticas actualizadas');
+        }
+
+        // Escuchar eventos de Netlify Identity
+        if (window.netlifyIdentity) {
+            netlifyIdentity.on('login', (user) => {
+                console.log('Usuario conectado:', user);
+                showAuthenticatedState();
+                if (currentTab === 'cms') {
+                    initializeCMS();
+                }
+            });
+
+            netlifyIdentity.on('logout', () => {
+                console.log('Usuario desconectado');
+                showLoginPrompt();
+            });
+        }
+
+        // Para debugging
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            window.debugAdmin = {
+                switchTab: (tab) => switchTab(tab),
+                openCMS: (collection) => openCMS(collection),
+                initializeCMS: () => initializeCMS(),
+                checkAuth: () => checkAuthentication()
+            };
+            console.log('🚀 Debug admin disponible en window.debugAdmin');
+        }
+    </script>
+</body>
+</html>

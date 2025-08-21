@@ -1,0 +1,277 @@
+backend:
+  name: git-gateway
+  branch: main # o master, dependiendo de tu rama principal
+
+# Configuración de medios
+media_folder: "images/posts" # carpeta donde se guardarán las imágenes
+public_folder: "/images/posts" # ruta pública para acceder a las imágenes
+
+# Configuración de la interfaz
+local_backend: true # para desarrollo local
+logo_url: "https://via.placeholder.com/200x50/DB9500/FFFFFF?text=ALICO+CMS"
+
+# Configuración de la interfaz de usuario
+site_url: "https://tu-sitio.netlify.app"
+display_url: "https://tu-sitio.netlify.app"
+locale: "es"
+
+# Configuración de colores y estilos
+colors:
+  primary: "#DB9500"
+  secondary: "#003DA6"
+  accent: "#71B338"
+
+# Configuración de fuentes
+fonts:
+  - "Zilla Slab"
+  - "Work Sans"
+
+# Colecciones de contenido
+collections:
+  # Posts del blog
+  - name: "blog"
+    label: "Posts del Blog"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string", required: true}
+      - {label: "Resumen", name: "excerpt", widget: "text", required: true}
+      - {label: "Contenido", name: "body", widget: "markdown", required: true}
+      - {label: "Categoría", name: "category", widget: "select", options: ["innovacion", "sostenibilidad", "tecnologia", "proyectos"], required: true}
+      - {label: "Imagen Principal", name: "image", widget: "image", required: true}
+      - {label: "Autor", name: "author", widget: "string", required: true}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "Fecha de Publicación", name: "date", widget: "datetime", required: true}
+      - {label: "Draft", name: "draft", widget: "boolean", default: false}
+      - {label: "Vistas", name: "views", widget: "number", default: 0, required: false}
+      - {label: "SEO Description", name: "seo_description", widget: "text", required: false}
+      - {label: "SEO Keywords", name: "seo_keywords", widget: "list", required: false}
+
+  # Páginas estáticas
+  - name: "pages"
+    label: "Páginas"
+    files:
+      - file: "pages/sobre-nosotros.md"
+        label: "Sobre Nosotros"
+        name: "sobre-nosotros"
+        fields:
+          - {label: "Título", name: "title", widget: "string", required: true}
+          - {label: "Contenido", name: "body", widget: "markdown", required: true}
+          - {label: "SEO Description", name: "seo_description", widget: "text", required: false}
+      
+      - file: "pages/contacto.md"
+        label: "Contacto"
+        name: "contacto"
+        fields:
+          - {label: "Título", name: "title", widget: "string", required: true}
+          - {label: "Contenido", name: "body", widget: "markdown", required: true}
+          - {label: "Email de Contacto", name: "contact_email", widget: "string", required: true}
+          - {label: "Teléfono", name: "contact_phone", widget: "string", required: false}
+          - {label: "Dirección", name: "contact_address", widget: "text", required: false}
+
+  # Configuración del sitio
+  - name: "config"
+    label: "Configuración del Sitio"
+    files:
+      - file: "data/site-config.yml"
+        label: "Configuración General"
+        name: "site-config"
+        fields:
+          - {label: "Nombre del Sitio", name: "site_name", widget: "string", required: true}
+          - {label: "Descripción del Sitio", name: "site_description", widget: "text", required: true}
+          - {label: "Logo", name: "logo", widget: "image", required: false}
+          - {label: "Favicon", name: "favicon", widget: "image", required: false}
+          - {label: "Color Principal", name: "primary_color", widget: "string", default: "#DB9500", required: false}
+          - {label: "Color Secundario", name: "secondary_color", widget: "string", default: "#003DA6", required: false}
+          - {label: "Email de Contacto", name: "contact_email", widget: "string", required: true}
+          - {label: "Teléfono", name: "contact_phone", widget: "string", required: false}
+          - {label: "Dirección", name: "address", widget: "text", required: false}
+          - {label: "Redes Sociales", name: "social_media", widget: "object", fields: [
+              {label: "Facebook", name: "facebook", widget: "string", required: false},
+              {label: "Twitter", name: "twitter", widget: "string", required: false},
+              {label: "LinkedIn", name: "linkedin", widget: "string", required: false},
+              {label: "Instagram", name: "instagram", widget: "string", required: false}
+            ]}
+
+  # Categorías del blog
+  - name: "categories"
+    label: "Categorías"
+    folder: "data/categories"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Nombre", name: "name", widget: "string", required: true}
+      - {label: "Slug", name: "slug", widget: "string", required: true}
+      - {label: "Descripción", name: "description", widget: "text", required: false}
+      - {label: "Imagen", name: "image", widget: "image", required: false}
+      - {label: "Color", name: "color", widget: "string", required: false}
+      - {label: "Orden", name: "order", widget: "number", default: 0, required: false}
+
+  # Autores del blog
+  - name: "authors"
+    label: "Autores"
+    folder: "data/authors"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Nombre", name: "name", widget: "string", required: true}
+      - {label: "Slug", name: "slug", widget: "string", required: true}
+      - {label: "Email", name: "email", widget: "string", required: true}
+      - {label: "Biografía", name: "bio", widget: "text", required: false}
+      - {label: "Avatar", name: "avatar", widget: "image", required: false}
+      - {label: "Cargo", name: "position", widget: "string", required: false}
+      - {label: "Departamento", name: "department", widget: "string", required: false}
+      - {label: "Redes Sociales", name: "social_media", widget: "object", fields: [
+          {label: "LinkedIn", name: "linkedin", widget: "string", required: false},
+          {label: "Twitter", name: "twitter", widget: "string", required: false}
+        ]}
+
+  # Comentarios del blog
+  - name: "comments"
+    label: "Comentarios"
+    folder: "data/comments"
+    create: false
+    slug: "{{slug}}"
+    fields:
+      - {label: "Autor", name: "author", widget: "string", required: true}
+      - {label: "Email", name: "email", widget: "string", required: true}
+      - {label: "Contenido", name: "content", widget: "text", required: true}
+      - {label: "Post ID", name: "post_id", widget: "string", required: true}
+      - {label: "Fecha", name: "date", widget: "datetime", required: true}
+      - {label: "Aprobado", name: "approved", widget: "boolean", default: false, required: false}
+      - {label: "Respuesta", name: "reply", widget: "text", required: false}
+
+  # Newsletter
+  - name: "newsletter"
+    label: "Newsletter"
+    folder: "data/newsletter"
+    create: false
+    slug: "{{slug}}"
+    fields:
+      - {label: "Email", name: "email", widget: "string", required: true}
+      - {label: "Fecha de Suscripción", name: "subscribed_date", widget: "datetime", required: true}
+      - {label: "Activo", name: "active", widget: "boolean", default: true, required: false}
+      - {label: "Categorías de Interés", name: "interests", widget: "list", required: false}
+
+# Configuración del editor
+editor:
+  preview: true
+  frame: true
+
+# Configuración de widgets personalizados
+widgets:
+  - name: "custom_markdown"
+    label: "Editor Markdown Mejorado"
+    widget: "markdown"
+    buttons:
+      - "bold"
+      - "italic"
+      - "code"
+      - "link"
+      - "heading-one"
+      - "heading-two"
+      - "heading-three"
+      - "heading-four"
+      - "heading-five"
+      - "heading-six"
+      - "quote"
+      - "bulleted-list"
+      - "numbered-list"
+      - "table"
+      - "image"
+      - "video"
+      - "embed"
+
+# Configuración de notificaciones
+notifications:
+  - type: "success"
+    message: "Contenido guardado exitosamente"
+  - type: "error"
+    message: "Error al guardar el contenido"
+
+# Configuración de validación
+validation:
+  - rule: "required"
+    message: "Este campo es obligatorio"
+  - rule: "min"
+    value: 3
+    message: "Debe tener al menos 3 caracteres"
+
+# Configuración de búsqueda
+search:
+  fields:
+    - title
+    - excerpt
+    - body
+    - tags
+    - author
+
+# Configuración de exportación
+export_dir: "exports"
+export_format: "json"
+
+# Configuración de respaldos
+backup:
+  enabled: true
+  frequency: "daily"
+  retention: "30 days"
+
+# Configuración de analytics
+analytics:
+  enabled: true
+  provider: "google"
+  tracking_id: ""
+
+# Configuración de SEO
+seo:
+  enabled: true
+  default_title: "Blog de Innovación Alico"
+  default_description: "Descubre las últimas novedades sobre innovación, sostenibilidad y tecnología en la industria del packaging."
+  default_keywords: ["innovación", "sostenibilidad", "tecnología", "packaging", "alico"]
+  og_image: ""
+  twitter_card: "summary_large_image"
+
+# Configuración de comentarios
+comments:
+  enabled: true
+  provider: "disqus"
+  shortname: ""
+  moderation: true
+  spam_protection: true
+
+# Configuración de redes sociales
+social_sharing:
+  enabled: true
+  platforms:
+    - facebook
+    - twitter
+    - linkedin
+    - email
+
+# Configuración de cache
+cache:
+  enabled: true
+  duration: "1 hour"
+  invalidation: "on_change"
+
+# Configuración de seguridad
+security:
+  allowed_ips: []
+  rate_limiting: true
+  max_attempts: 5
+  lockout_duration: "15 minutes"
+
+# Configuración de logs
+logging:
+  enabled: true
+  level: "info"
+  retention: "90 days"
+  format: "json"
+
+# Configuración de monitoreo
+monitoring:
+  enabled: true
+  health_checks: true
+  uptime_monitoring: true
+  performance_tracking: true
